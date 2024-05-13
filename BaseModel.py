@@ -16,7 +16,7 @@ def remove_stopWords(query):
     import nltk
 
     # Remove stop words
-    stop_words = set(nltk.corpus.stopwords.words('english'))
+    stop_words = {'in', 'has', 'shouldn', 'between', 'more', 'once', 'further', "needn't", 'against', 'on', 'mustn', 'me', 'have', 'can', 'couldn', 'they', 'didn', 'because', 'the', 's', "hasn't", 'below', 'am', 'what', 'there', 'does', 'won', 'than', 'after', 'both', 'mightn', "shouldn't", 'over', 'you', 'of', 'so', 'nor', 'but', 'yours', 'those', 'before', 'o', 'for', 'a', 'doing', 'to', 'was', 'his', 'its', 'into', 'is', 'when', 'he', 'now', 'them', 'do', "mightn't", "she's", 'her', "it's", 'be', 'any', 'other', "you've", 'some', 'should', 'from', 'under', "haven't", 'during', 'with', 'i', 'will', 'while', 'by', "shan't", 'themselves', 'itself', 'did', "don't", 'only', "mustn't", "aren't", 'are', 'above', 'if', 're', 'off', 'ma', 'down', "wasn't", 'just', "hadn't", 'had', 'or', 'hasn', "you're", "didn't", 'these', 'hers', 'yourself', 'most', 'not', 've', 'ours', 'that', 'it', 'being', 'same', 'up', 'whom', 'why', 'then', 't', 'who', "isn't", 'wasn', 'ain', 'our', 'about', 'needn', 'own', "that'll", 'no', "should've", 'hadn', "wouldn't", 'their', 'll', "weren't", 'myself', 'shan', 'and', 'weren', 'through', 'until', 'this', 'been', 'as', "won't", 'doesn', 'which', 'don', 'your', 'him', 'd', 'himself', 'at', 'theirs', 'here', 'wouldn', 'y', 'were', 'herself', "couldn't", 'aren', 'haven', 'few', 'she', 'my', 'yourselves', 'how', 'again', 'too', 'very', 'where', "doesn't", 'we', "you'll", 'each', 'all', 'm', 'out', "you'd", 'such', 'having', 'ourselves', 'isn', 'an'}
     stop_words.remove("or")
     stop_words.remove("and")
     stop_words.remove("not")
@@ -34,6 +34,8 @@ def handle_boolean(query):
             del query[i]
         elif i == len(query)-1 and query[i] in logical_operators:
             del query[i]
+        elif i==len(query)-1:
+            break
         elif query[i] in logical_operators and query[i+1] in logical_operators:
             del query[i]
         elif query[i] in logical_operators:
@@ -56,14 +58,15 @@ def check_query(doc, query):
         if query[i] in doc:
             query[i] = "True"
         else:
-            query[i] = "False"            
+            query[i] = "False"
 
     return query
 
 
 def BoleanModel(query):
     related_docs = []
-    
+    if not query:
+        return related_docs
     # Handle Query
     query = query.lower().split()
     query = remove_stopWords(query)

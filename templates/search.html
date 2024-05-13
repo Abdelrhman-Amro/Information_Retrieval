@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Engine</title>
+</head>
+<body>
+    <form id="searchForm" method="post">
+        <input type="text" id="searchInput" name="query" placeholder="Enter your search query">
+        <button type="submit">Search</button>
+    </form>
+    <h2>Search Results for "{{ query }}"</h2>
+    {% if results %}
+        <ul>
+            {% for result in results %}
+                <li>{{ result }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
