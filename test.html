@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simple Search</title>
+<style>
+    #searchResult {
+        margin-top: 10px;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+    <input type="text" id="searchInput" placeholder="Search...">
+    <button id="searchButton">Search</button>
+    <div id="searchResult"></div>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const searchResult = document.getElementById('searchResult');
+        const query = searchInput.value.trim();
+
+        searchButton.addEventListener('click', function() {
+            
+
+            if (query !== '') {
+                searchResult.textContent = `Search Query: ${query}`;
+            } else {
+                alert('Please enter a search query.');
+            }
+        });
+    </script>
+</body>
+</html>

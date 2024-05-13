@@ -30,18 +30,24 @@ def remove_stopWords(query):
 def handle_boolean(query):
     logical_operators = ["and", "or", "not"]
     for i in range(len(query)):
+        # if first word is logical operator -> remove first one
         if i == 0 and query[i] in logical_operators:
             del query[i]
+        # if last word is logical operator -> remove last one
         elif i == len(query)-1 and query[i] in logical_operators:
             del query[i]
+        # logical loagical -> remove first one
         elif query[i] in logical_operators and query[i+1] in logical_operators:
             del query[i]
+        # logical word
         elif query[i] in logical_operators:
             if query[i] == "not" and query[i-1] != "and":
                 query.insert(i, "and")
             continue  
+        # word logical
         elif query[i+1] in logical_operators:
             continue
+        # word word -> insert and between them
         else:
             query.insert(i+1, "and")
             i+=1
@@ -49,6 +55,7 @@ def handle_boolean(query):
 
 
 def check_query(doc, query):
+    
     for i in range(len(query)):
         logical_operators = ["and", "or", "not"]
         if query[i] in logical_operators:
@@ -61,17 +68,13 @@ def check_query(doc, query):
     return query
 
 
-def BoleanModel(query):
-    related_docs = []
-    
+def BoleanModel(docs, query):
+    all_results = {True:[], False:[]}
+
     # Handle Query
     query = query.lower().split()
     query = remove_stopWords(query)
     query = handle_boolean(query)
-    
-    # Retrieve Documents
-    folder_path = './Documents'
-    docs = retrieve_docs(folder_path)
 
     for doc in docs:
         # Handle Documents
@@ -81,24 +84,34 @@ def BoleanModel(query):
             text = text.lower()
             text = text.split()
             text = remove_stopWords(text)
+            print("Document: ", text)
+        
+        # Handle Query
+        print("Query: ", query)
         
         # Handle Result
         result = check_query(text, query.copy())
+        print(result)
 
         result = " ".join(result)
+        print("Executable str -> ", result)
         result = eval(result)
         doc_name = doc.split("/")[-1]
+        print(f"Document {{doc_name}}: {result}")
+        print("#-------------------------------------------#")
+        all_results[result].append(doc_name)
 
-        if result == True:
-            related_docs.append(doc_name)
-
-    return related_docs
+    return all_results
 
 
 if __name__ == "__main__":
+    # Retrieve Documents
+    folder_path = './Documents'
+    documents = retrieve_docs(folder_path)
     query = "the football player and in Cairo not basketball"
-    result = BoleanModel(query)
+    result = BoleanModel(documents, query)
     print(result)
+
 
 
 ##### Algorithm #####
